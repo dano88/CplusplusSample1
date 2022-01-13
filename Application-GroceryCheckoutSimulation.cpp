@@ -1,6 +1,6 @@
 //==========================================================
 //
-// Title:      Grocery Checkout Simluation
+// Title:      Grocery Store Checkout Lane Simluation
 // Author:     Dan Ouellette
 // Description:
 //   This C++ console application simulates a checkout lane
@@ -8,7 +8,15 @@
 // represent the lane.  A menu enables the user to set the
 // number of simulation cycles and the probability that a 
 // customer enters, rather than exits, the queue.  The 
-// application requires three files:
+// simulation generates a random number.  If the number is 
+// less than or equal to probability level, a customer is
+// added to the queue.  If the number is greater than the
+// probability level, a customer is removed from the queue.
+// If a customer is entering the queue, two more random
+// numbers are generated:
+//   -The number of items in their cart.
+//   -The cost of the items in their cart.
+// The application requires three files:
 //   -This file
 //   -Class-Customer-Header.h
 //   -Class-Customer-Implementation.cpp
@@ -20,7 +28,7 @@
 #include <iostream>  // For cin, cout, and system
 #include <string>  // For string data type
 #include "Class-Customer-Header.h"
-using namespace std;  // So "std::cout" may be abbreviated to "cout"
+using namespace std;
 
 //==========================================================
 // Globals
@@ -28,7 +36,7 @@ using namespace std;  // So "std::cout" may be abbreviated to "cout"
 const int COLFMT = 22;
 Customer *head = NULL;
 Customer *tail = NULL;
-int listSize = 0;
+int queueSize = 0;
 
 //==========================================================
 // addNodeToBack
@@ -36,7 +44,7 @@ int listSize = 0;
 void addNodeToBack(Customer* ptr)
 {
 
-  // Test if list empty
+  // Test if queue empty
   if (head == NULL)
   {
     head = ptr;
@@ -45,24 +53,24 @@ void addNodeToBack(Customer* ptr)
   else
   {
 
-    // Add node to back of list
+    // Add node to back of queue
     tail->setNext(ptr);
     tail = ptr;
 
   }
 
-  // Print add message and update list size
-  cout << "Node added to back of list: ["
+  // Print add message and update queue size
+  cout << "Node added to back of queue: ["
     << ptr->getItems() << ", " << ptr->getItemCost() << "]"
     << endl;
-  listSize = listSize + 1;
+  queueSize = queueSize + 1;
 
 }
 
 //==========================================================
-// clearList
+// clearQueue
 //==========================================================
-void clearList()
+void clearQueue()
 {
 
   // Declare variables
@@ -77,14 +85,14 @@ void clearList()
     ptr = head;
   }
 
-  // Initialize list pointers
+  // Initialize queue pointers
   head = NULL;
   tail = NULL;
 
-  // Print clear message and update list size
-  cout << "\nList cleared." << endl;
-  listSize = 0;
-  cout << "List size: " << listSize << endl;
+  // Print clear message and update queue size
+  cout << "\nQueue cleared." << endl;
+  queueSize = 0;
+  cout << "Queue size: " << queueSize << endl;
 
 }
 
@@ -97,10 +105,10 @@ Customer* deleteNodeFromFront()
   // Declare variables
   Customer* ptr = NULL;
 
-  // Test if list empty
-  if (listSize == 0)
+  // Test if queue empty
+  if (queueSize == 0)
     cout
-      << "The list is empty.  "
+      << "The queue is empty.  "
       << "There is no node to delete." << endl;
   else if (head == tail)
   {
@@ -124,11 +132,11 @@ Customer* deleteNodeFromFront()
   if (ptr != NULL)
   {
 
-    // Print delete message and update list size
-    cout << "Node deleted from front of list: ["
-      << ptr->getItems() << ", " << ptr->getItemCost() << "]"
-      << endl;
-    listSize = listSize - 1;
+    // Print delete message and update queue size
+    cout << "Node deleted from front of queue: ["
+      << ptr->getItems() << ", " << ptr->getItemCost() 
+      << "]" << endl;
+    queueSize = queueSize - 1;
 
   }
 
@@ -146,12 +154,12 @@ int menuOption()
   int option;
 
   // Show menu
-  cout << "\nGrocery Checkout Simulation Menu" << endl;
+  cout << "\nSimulation Menu" << endl;
   cout << "1 - Set simulation cycles" << endl;
   cout << "2 - Set add-remove level" << endl;
   cout << "3 - Run simulation" << endl;
-  cout << "4 - Print list" << endl;
-  cout << "5 - Clear list" << endl;
+  cout << "4 - Print queue" << endl;
+  cout << "5 - Clear queue" << endl;
   cout << "0 - Exit" << endl;
   cout << "Enter an option: ";
   cin >> option;
@@ -160,9 +168,9 @@ int menuOption()
 }
 
 //==========================================================
-// printList
+// printQueue
 //==========================================================
-void printList()
+void printQueue()
 {
 
   // Declare variables
@@ -170,15 +178,16 @@ void printList()
   int totalItems;
   double totalItemCost;
 
-  // Test if list is empty
+  // Test if queue is empty
   if (head == NULL)
-    cout << "\nThe list is empty." << endl;
+    cout << "\nThe queue is empty." << endl;
   else
   {
 
     // Print column headings
-    cout << endl << "Current Checkout Lane" << endl;
-    cout << setw(COLFMT) << left << "ID"
+    cout << endl << "Current Grocery Store Checkout Lane" 
+      << endl;
+    cout << setw(COLFMT) << left << "Customer ID"
       << setw(COLFMT) << right << "Items"
       << setw(COLFMT) << right << "Item Cost ($)"
       << endl;
@@ -217,7 +226,7 @@ void printList()
     }
 
     // Print totals
-    cout << "List size: " << listSize << endl << endl;
+    cout << "Queue size: " << queueSize << endl << endl;
     cout << setw(COLFMT) << left << "Total items: "
       << setw(COLFMT) << right << totalItems << endl;
     cout << setw(COLFMT) << left << "Total item cost ($): "
@@ -234,7 +243,7 @@ void runSimulation(int cycles, int level)
 {
 
   // Declare variables
-  int addRemoveFlag;
+  int addRemoveLevel;
   static int id = 1;
   int items;
   double itemCost;
@@ -251,8 +260,8 @@ void runSimulation(int cycles, int level)
     cout << "\n[" << i << "] ";
 
     // Add to or remove from the queue
-    addRemoveFlag = rand() % 100 + 1;
-    if (addRemoveFlag <= level)
+    addRemoveLevel = rand() % 100 + 1;
+    if (addRemoveLevel <= level)
     {
 
       // Generate random items between 1 and 200
@@ -358,8 +367,12 @@ int main()
   int itemCost;
 
   // Show application header
-  cout << "Welcome to Grocery Checkout Simulation" << endl;
-  cout << "--------------------------------------" << endl;
+  cout 
+    << "Welcome to Grocery Store Checkout Lane Simulation" 
+    << endl;
+  cout 
+    << "-------------------------------------------------" 
+    << endl;
 
   // Loop to process menu options
   option = menuOption();
@@ -383,11 +396,11 @@ int main()
         break;
 
       case 4:
-        printList();
+        printQueue();
         break;
 
       case 5:
-        clearList();
+        clearQueue();
         break;
 
       default:
@@ -402,6 +415,7 @@ int main()
   }
 
   // Show application close
-  cout << "\nEnd of Grocery Checkout Simulation" << endl;
+  cout << "\nEnd of Grocery Store Checkout Lane Simulation" 
+    << endl;
 
 }

@@ -12,13 +12,7 @@
 #include <iostream>  // For cin, cout, and system
 #include <string>  // For string data type
 #include "Class-Customer-Header.h"
-using namespace std;  // So "std::cout" may be abbreviated to "cout", for example.
-
-//----------------------------------------------------------
-// Constants
-//----------------------------------------------------------
-
-const int COLFMT = 20;
+using namespace std;
 
 //----------------------------------------------------------
 // Function implementations
@@ -86,7 +80,8 @@ void Customer::setID(int id)
 void Customer::setItems(int items)
 {
   if (items < 1 || items > 200)
-    cout << "Error: items must be between 1 and 200." << endl;
+    cout << "Error: items must be between 1 and 200." 
+      << endl;
   else
     this->items = items;
 }
@@ -95,7 +90,8 @@ void Customer::setItems(int items)
 void Customer::setItemCost(double itemCost)
 {
   if (itemCost < 100 || itemCost > 1000)
-    cout << "Error: itemCost must be between 100 and 1000." << endl;
+    cout << "Error: itemCost must be between 100 and 1000." 
+      << endl;
   else
     this->itemCost = itemCost;
 }

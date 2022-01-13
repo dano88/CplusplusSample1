@@ -2,9 +2,11 @@
 //
 // Title: Class-Customer-Header
 // Description:
-//   This C++ header defines the function prototypes for 
-// the functions implemented in file 
-// Class-Customer-Implementation.cpp.
+//   This C++ header represents a customer in the grocery
+// store checkout lane.  It includes a customer ID, and the
+// number and cost of the items in their shopping cart.  It
+// defines the function prototypes for the functions 
+// implemented in file Class-Customer-Implementation.cpp.
 //
 //==========================================================
 #include <cstdlib>  // For several general-purpose functions
@@ -12,7 +14,7 @@
 #include <iomanip>  // For formatted output
 #include <iostream>  // For cin, cout, and system
 #include <string>  // For string data type
-using namespace std;  // So "std::cout" may be abbreviated to "cout", for example.
+using namespace std;
 
 //----------------------------------------------------------
 // Customer class
@@ -39,7 +41,7 @@ class Customer
   public:
 
     //------------------------------------------------------
-    // Constructor and destructor prototypes
+    // Constructor prototypes
     //------------------------------------------------------
 
     Customer();
